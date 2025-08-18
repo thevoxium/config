@@ -6,7 +6,7 @@
   <property name="pressureMultiplier" value="1"/>
   <property name="zoomGesturesEnabled" value="true"/>
   <property name="selectedToolbar" value="Portrait"/>
-  <property name="lastSavePath" value="/Users/anshul/mlimplementation"/>
+  <property name="lastSavePath" value="/Users/anshul/Downloads"/>
   <property name="lastOpenPath" value="/Users/anshul/Downloads"/>
   <property name="lastImagePath" value=""/>
   <property name="edgePanSpeed" value="20"/>
@@ -14,7 +14,7 @@
   <property name="zoomStep" value="10"/>
   <property name="zoomStepScroll" value="2"/>
   <property name="displayDpi" value="72"/>
-  <property name="mainWndWidth" value="1696"/>
+  <property name="mainWndWidth" value="848"/>
   <property name="mainWndHeight" value="1030"/>
   <property name="maximized" value="false"/>
   <property name="showToolbar" value="true"/>
@@ -235,7 +235,7 @@
       <attribute name="drawingType" type="string" value="default"/>
     </data>
     <data name="pen">
-      <attribute name="color" type="hex" value="ff00ff00"/>
+      <attribute name="color" type="hex" value="ff00c0ff"/>
       <attribute name="drawingType" type="string" value="default"/>
       <attribute name="fill" type="int" value="0"/>
       <attribute name="fillAlpha" type="int" value="128"/>
