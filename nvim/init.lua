@@ -72,6 +72,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- Disable syntax highlighting
 
 
+vim.o.cmdheight = 0
 
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
