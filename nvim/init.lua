@@ -27,6 +27,7 @@ import = "nvchad.plugins",
 lazy = false,
 },
 
+ 
 { import = "plugins" },
 {
 "inkdrop",
@@ -55,6 +56,23 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.lsp.buf.format({ async = false })
   end,
 })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.server_capabilities.semanticTokensProvider then
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+  end,
+})
+
+
+--- different color theme, delete if dont like
+---
+-- Disable syntax highlighting
+
+
+
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")

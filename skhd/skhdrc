@@ -5,10 +5,10 @@ cmd - return : open -n -a "Kitty"
 cmd + shift - return : open -n -a "Brave Browser" 
 
 # moves focus between windows in the current focused display
-cmd - h : yabai -m window --focus west
-cmd - j : yabai -m window --focus south
-cmd - k : yabai -m window --focus north
-cmd - l : yabai -m window --focus east
+cmd+shift - h : yabai -m window --focus west
+cmd+shift - j : yabai -m window --focus south
+cmd+shift - k : yabai -m window --focus north
+cmd+shift - l : yabai -m window --focus east
 
 # moves focus between spaces 
 alt - 1 : yabai -m space --focus 1
@@ -70,7 +70,7 @@ alt - n : yabai -m space --create && \
                   yabai -m space --focus "${index}"
 
 # create a new space, move window and follow focus
-shift + alt - n : yabai -m space --create && \
+ctrl + shift + alt - n : yabai -m space --create && \
                   index="$(yabai -m query --displays --display | jq '.spaces[-1]')" && \
                   yabai -m window --space "${index}" && \
                   yabai -m space --focus "${index}"

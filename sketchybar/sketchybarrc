@@ -27,14 +27,6 @@ sketchybar --default \
   background.padding_right=$GAP background.height=25 \
   background.corner_radius=6
 
-sketchybar --add item os left \
-  --set os \
-  icon= icon.color=0xfffefefe \
-  icon.font.size=20 icon.y_offset=1 \
-  icon.padding_left=7 icon.padding_right=0 \
-  label.padding_left=0 label.padding_right=6 \
-  click_script="sketchybar -m --set \$NAME popup.drawing=toggle" \
-  popup.background.corner_radius=3 popup.background.border_color=$ITEM_COLOR
 
 sketchybar --add item os.preferences popup.os \
   --set os.preferences icon= \
@@ -52,15 +44,6 @@ sketchybar --add item os.github popup.os \
   click_script="open -a 'Github Desktop'; sketchybar -m --set os popup.drawing=toggle"
 
 
-sketchybar --add item host left \
-  --set host \
-  label="$(sed 's/.local//' <<< $(hostname))" label.font.style="Bold" \
-  icon=󰌢 icon.color=0xFFFEFEFE
-
-sketchybar --add item user left \
-  --set user \
-  label="$(whoami)" label.font.style="Bold" \
-  icon=󰀄 icon.color=0xFFFEFEFE
 
 sketchybar --add item front-app left \
   --set front-app \
