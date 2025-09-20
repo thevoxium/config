@@ -1,99 +1,91 @@
-BG=0x00000000
+#!/bin/bash
 
-FONT="JetBrainsMonoNL Nerd Font"
-FONT_SIZE=14
-FONT_COLOR=0xFFFEFEFE
-ICON_FONT_SIZE=16
+source "$CONFIG_DIR/colors.sh" # Loads all defined colors
+source "$CONFIG_DIR/icons.sh" # Loads all defined icons
 
-ITEM_PADDING=12
-ITEM_COLOR=0xFF000000
-GAP=6
+ITEM_DIR="$CONFIG_DIR/items" # Directory where the items are configured
+PLUGIN_DIR="$CONFIG_DIR/plugins" # Directory where all the plugin scripts are stored
 
-PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
+FONT="SF Pro" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
+PADDINGS=3 # All paddings use this value (icon, label, background)
 
-sketchybar --bar \
-  margin=0 y_offset=0 height=38 \
-  corner_radius=0 blur_radius=10 \
-  border_width=0 \
-  padding_left=17 padding_right=17 \
-  color=$BG
+# # Setting up and starting the helper process
+# HELPER=git.felix.helper
+# killall helper
+# (cd $CONFIG_DIR/helper && make)
+# $CONFIG_DIR/helper/helper $HELPER > /dev/null 2>&1 &
 
-sketchybar --default \
-  label.font="$FONT:Regular:$FONT_SIZE" label.color=$FONT_COLOR \
-  label.padding_left=$ITEM_PADDING label.padding_right=$ITEM_PADDING \
-  icon.font="$FONT:Regular:$ICON_FONT_SIZE"\
-  icon.padding_left=$ITEM_PADDING \
-  background.color=$ITEM_COLOR \
-  background.padding_right=$GAP background.height=25 \
-  background.corner_radius=6
+# Unload the macOS on screen indicator overlay for volume change
+launchctl unload -F /System/Library/LaunchAgents/com.apple.OSDUIHelper.plist > /dev/null 2>&1 &
 
-
-sketchybar --add item os.preferences popup.os \
-  --set os.preferences icon= \
-  label="Preferences" \
-  click_script="open -a 'System Preferences'; sketchybar -m --set os popup.drawing=toggle"
-
-sketchybar --add item os.appstore popup.os \
-  --set os.appstore icon= \
-  label="App Store" \
-  click_script="open -a 'App Store'; sketchybar -m --set os popup.drawing=toggle"
-
-sketchybar --add item os.github popup.os \
-  --set os.github icon=\
-  label="GitHub" \
-  click_script="open -a 'Github Desktop'; sketchybar -m --set os popup.drawing=toggle"
+# Setting up the general bar appearance of the bar
+bar=(
+  corner_radius=12
+  height=33
+  color=$BAR_COLOR
+  border_width=2
+  border_color=$BAR_BORDER_COLOR
+  shadow=off
+  position=top
+  sticky=on
+  y_offset=0
+  margin=6
+  topmost=window
+)
 
 
+# Setting up default values
+defaults=(
+  updates=when_shown
+  icon.font="$FONT:Bold:14.0"
+  icon.color=$ICON_COLOR
+  icon.padding_left=$PADDINGS
+  icon.padding_right=$PADDINGS
+  label.font="$FONT:Semibold:13.0"
+  label.color=$LABEL_COLOR
+  label.padding_left=$PADDINGS
+  label.padding_right=$PADDINGS
+  padding_right=$PADDINGS
+  padding_left=$PADDINGS
+  background.height=26
+  background.corner_radius=9
+  background.border_width=2
+  popup.background.border_width=2
+  popup.background.corner_radius=9
+  popup.background.border_color=$POPUP_BORDER_COLOR
+  popup.background.color=$POPUP_BACKGROUND_COLOR
+  popup.blur_radius=20
+  popup.background.shadow.drawing=on
+)
 
-sketchybar --add item front-app left \
-  --set front-app \
-  script="$PLUGIN_DIR/front-app.sh" \
-  label.font.style="Bold" \
-  icon.padding_left=18 label.padding_right=20 \
-  --subscribe front-app front_app_switched
+sketchybar  --bar "${bar[@]}" --default "${defaults[@]}"
+
+# Left
+source "$ITEM_DIR/spaces.sh"
+source "$ITEM_DIR/yabai.sh"
+
+# Right
+source "$ITEM_DIR/front_app.sh"
+source "$ITEM_DIR/calendar.sh"
+
+sketchybar --add alias "TextInputMenuAgent,Item-0" right \
+           --set "TextInputMenuAgent,Item-0" padding_left=0 padding_right=10 label.width=0 update_freq=1
+
+source "$ITEM_DIR/wifi.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/volume.sh"
 
 
+status_bracket=(
+  background.color=$BACKGROUND_1
+  background.border_color=$BACKGROUND_2
+)
 
-sketchybar --add item clock right \
-  --set clock \
-  script="$PLUGIN_DIR/clock.sh" \
-  icon.font="$FONT:Regular:14" \
-  background.padding_right=0 \
-  click_script="sketchybar -m --set \$NAME popup.drawing=toggle" \
-  popup.background.corner_radius=3 popup.background.border_color=$ITEM_COLOR \
-  popup.align="right" \
-  update_freq=10
+sketchybar --add bracket status "TextInputMenuAgent,Item-0" wifi battery github.bell volume_icon \
+           --set status "${status_bracket[@]}"
 
-sketchybar --add item clock.date popup.clock \
-  --set clock.date \
-  label="$(date '+%a %b %d %Y')" \
-  background.padding_right=-1 \
-  label.padding_right=23 \
-  click_script="sketchybar -m --set clock popup.drawing=toggle"
-
-sketchybar --add item battery right \
-  --set battery \
-  script="$PLUGIN_DIR/battery.sh" \
-  update_freq=60
-
-sketchybar --add item wifi right \
-   --set wifi \
-   script="$PLUGIN_DIR/wifi.sh" \
-   --subscribe wifi wifi_change \
-   --subscribe wifi mouse.clicked
-
-sketchybar --add item weather right \
-  --set weather \
-  icon=󰅟 \
-  script="$PLUGIN_DIR/weather.sh" \
-  update_freq=3600 \
-  --subscribe weather mouse.clicked
-
-#sketchybar --add item moon right \
-#  --set moon \
-#  icon= \
-#  script="$PLUGIN_DIR/moon.sh" \
-#  update_freq=3600 \
-#  --subscribe moon mouse.clicked
-
+# Forcing all item scripts to run (never do this outside of sketchybarrc)
 sketchybar --update
+
+echo "sketchybar configuation loaded.."
+
